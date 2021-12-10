@@ -7,3 +7,5 @@
     - php artisan migrate
     - php artisan storage:link
     
+ ## Ejecución:
+ Ejecutar el comando php artisan serve
