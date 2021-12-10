@@ -12,4 +12,6 @@ Auth::routes([
     'confirm' => false
 ]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::middleware(['auth', 'variables'])->group(function () {
+    Route::resource('productos', ProductoController::class);
+});

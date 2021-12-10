@@ -1,4 +1,4 @@
-}<?php
+<?php
 
 return [
 
@@ -72,7 +72,7 @@ return [
     */
 
     'links' => [
-        public_path('imagenes_productos') => storage_path('app/public'),
+        public_path('imagenes_productos') => storage_path('app/public/imagenes_productos'),
     ],
 
 ];

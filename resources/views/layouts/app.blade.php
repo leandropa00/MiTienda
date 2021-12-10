@@ -9,7 +9,12 @@
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-        <script src="{{ asset('js/app.js') }}"></script>
+        <style>
+            a {
+                cursor: pointer;
+            }
+        </style>
+        @stack('css')
     </head>
     <body>
         <div id="app">
@@ -23,7 +28,12 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-
+                            <li class="nav-item">
+                                <a class="nav-link @if(Route::is('productos*')) active @endif" href="{{ route('productos.index') }}">Productos</a>
+                            </li>
+                            {{-- <li class="nav-item">
+                                <a class="nav-link @if(Route::is('facturas')) active @endif" href="{{ route('facturas') }}">Facturas</a>
+                            </li> --}}
                         </ul>
                         <ul class="navbar-nav ml-auto">
                             @guest
@@ -36,7 +46,7 @@
                             @else
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::user()->nombre }}
+                                        {{ $sesion->nombre }}
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout-form').submit();">
@@ -53,9 +63,110 @@
                 </div>
             </nav>
             <main class="py-4">
-                @yield('content')
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>
+                                        @yield('title')
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    @yield('content')
+                                    <div class="modal fade" id="ventana" tabindex="-1" role="dialog" aria-labelledby="ventanaLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable" role="document" id="ventana-size">
+                                            <div class="modal-content" id="ventana-content"><div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
+        <script src="{{ asset('js/app.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/jquery.blockUI.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/sweetalert2@9.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/maskMoney.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/ajax-form.min.js') }}"></script>
+        <script type="text/javascript" src="{{asset('js/font-awesome.js')}}"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#ventana').on('hidden.bs.modal', function (e) {
+                    e.target.id == 'ventana' && $('#ventana-content').empty()
+                })
+            })
+
+            mostrarErroresAjax = (res) => {
+                var html = ''
+                $.each(res.responseJSON.errors, function (campo, valor) {
+                    $.each(valor, function (campo, val) {
+                        html += val + "<br>";
+                    })
+                })
+                $("#errores").html(html)
+                $("#errores").removeClass("d-none")
+            }
+
+            cargarModal = (url, size) => {
+                $.blockUI()
+                $('#ventana-content').load(url, function (response, status, request) {
+                    $.unblockUI()
+                    status == 'success'
+                        ? (
+                            $('#ventana').modal('show'),
+                            $('#ventana-size').removeClass('modal-sm').removeClass('modal-md').removeClass('modal-lg').removeClass('modal-xl').addClass(`modal-${size}`)
+                        ) : Swal.fire('Ha ocurrido un error', response.responseText, 'error')
+                })
+            }
+
+            cerrarModal = () => {
+                $('#ventana').modal('hide')
+            }
+
+            soloNumeros = (valor) => {
+                var out = '',
+                    filtro = '0123456789'
+                for (var i=0; i < valor.length; i++)
+                    if (filtro.indexOf(valor.charAt(i)) != -1)
+                        out += valor.charAt(i)
+                return out
+            }
+
+            confirmarEliminacion = async (form, ajax, callback) => {
+                await ajaxForm(form, callback)
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡No podrás revertir esta acción!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonText: '¡Sí, eliminar!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.blockUI()
+                        $(form).submit()
+                    }
+                })
+            }
+
+            ajaxForm = (form, callback) => {
+                $(form).ajaxForm({
+                    success: function (r) {
+                        $.unblockUI()
+                        Swal.fire('Hecho', r, 'success').then(callback)
+                    },
+                    error: function (r) {
+                        $.unblockUI()
+                        Swal.fire('Ha ocurrido un error', r.responseText, 'error')
+                    }
+                })
+            }
+        </script>
         @stack('scripts')
     </body>
 </html>
