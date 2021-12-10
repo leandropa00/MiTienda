@@ -58,7 +58,7 @@ class Producto extends Model
 
     public function getRutaImagenAttribute()
     {
-        return "imagenes_productos/{$this->id}.{$this->extension_imagen}";
+        return "storage/imagenes_productos/{$this->id}.{$this->extension_imagen}";
     }
 
     public function eliminarImagen()
