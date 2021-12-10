@@ -46,7 +46,16 @@ class ProductoController extends Controller
 
     function destroy(Producto $producto)
     {
-        $producto->eliminarImagen()->delete();
-        return $this->responseSuccess('Producto eliminado satisfactoriamente');
+        try {
+            $producto->delete();
+            $producto->eliminarImagen();
+            return $this->responseSuccess('Producto eliminado satisfactoriamente');
+        } catch (\Throwable $th) {
+            return $this->responseError(
+                $th->getCode() == 23000 ? 
+                'El producto tiene información relacionada' : 
+                $th->getMessage()
+            );
+        }
     }
 }

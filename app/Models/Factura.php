@@ -17,9 +17,19 @@ class Factura extends Model
         'total'          => 'integer',
     ];
 
+    public static $rules = [
+        'productos' => 'required|array|min:1'
+    ];
+
+    public static $messages = [
+        'productos.required' => 'No se agregaron productos',
+        'productos.array'    => 'Error cargando los productos',
+        'productos.min'      => 'Se debe ingresar al menos un producto',
+    ];
+
     public static function getConsecutivo()
     {
-        return self::max('numero_factura') ?? 1;
+        return (self::max('numero_factura') ?? 0) + 1;
     }
 
     public function productos()

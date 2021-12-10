@@ -11,7 +11,10 @@ class FacturaDataTable extends DataTable
     public function dataTable($query)
     {
         $dataTable = new EloquentDataTable($query);
-        return $dataTable->editColumn('created_at', function ($producto) {
+        return $dataTable->addColumn('action', 'facturas.actions')
+            ->editColumn('total', function ($producto) {
+                return '$'.number_format($producto->total, 0, ',', '.');
+            })->editColumn('created_at', function ($producto) {
                 return $producto->created_at->format('d/m/Y');
             });
     }
@@ -24,7 +27,7 @@ class FacturaDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('FacturaTable')
+            ->setTableId('FacturasTable')
             ->columns($this->getColumns())
             ->addTableClass('table table-striped dt-responsive')
             ->minifiedAjax()

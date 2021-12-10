@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\stock;
 
-use App\Models\Producto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest

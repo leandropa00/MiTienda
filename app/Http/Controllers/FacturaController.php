@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\FacturaDataTable;
+use App\Http\Requests\factura\CreateRequest;
+use App\Models\Factura;
+use Illuminate\Support\Facades\DB;
 
 class FacturaController extends Controller
 {
@@ -16,34 +19,19 @@ class FacturaController extends Controller
         return view('facturas.create');
     }
 
-    // function store(CreateRequest $request)
-    // {
-    //     $imagen = $request->file('imagen');
-    //     $request['precio'] = preg_replace('([^0-9])', '', $request->precio);
-    //     $request['extension_imagen'] = $imagen->getClientOriginalExtension();
-    //     Producto::create($request->all())->cargarImagen($imagen);
-    //     return $this->responseSuccess('Producto creado satisfactoriamente');
-    // }
-
-    // function edit(Producto $producto)
-    // {
-    //     return view('productos.edit', compact('producto'));
-    // }
-
-    // function update(Producto $producto, UpdateRequest $request)
-    // {
-    //     if ($imagen = $request->file('imagen')) {
-    //         $request['extension_imagen'] = $imagen->getClientOriginalExtension();
-    //         $producto->actualizarImagen($imagen, $request['extension_imagen']);
-    //     }
-    //     $request['precio'] = preg_replace('([^0-9])', '', $request->precio);
-    //     $producto->update($request->all());
-    //     return $this->responseSuccess('Producto actualizado satisfactoriamente');
-    // }
-
-    // function destroy(Producto $producto)
-    // {
-    //     $producto->eliminarImagen()->delete();
-    //     return $this->responseSuccess('Producto eliminado satisfactoriamente');
-    // }
+    function store(CreateRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            Factura::create([
+                'numero_factura' => Factura::getConsecutivo(),
+                'total'          => array_sum(array_column($request->productos, 'subtotal'))
+            ])->productos()->sync($request->productos);
+            DB::commit();
+            return $this->responseSuccess('Factura creada satisfactoriamente');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return $this->responseError($th->getMessage());
+        }
+    }
 }

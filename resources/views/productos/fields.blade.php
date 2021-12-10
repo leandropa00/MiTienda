@@ -47,46 +47,44 @@
     </a>
 @endsection
 
-@push('scripts')
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#form').ajaxForm({
-                beforeSubmit: () => {
-                    $.blockUI()
-                }, success: (res) => {
-                    Swal.fire('Proceso exitoso', res, 'success').then(() => {
-                        window.LaravelDataTables['ProductosTable'].draw(false)
-                        cerrarModal()
-                    })
-                }, error: (res) => {
-                    res.status == 422
-                        ? mostrarErroresAjax(res)
-                        : Swal.fire('Ocurrió un error', res.responseText, 'error')
-                }, complete: () => {
-                    $.unblockUI()
-                }
-            })
-            $('.maskmoney').maskMoney({
-                prefix    : '$',
-                thousands :'.',
-                decimal   :'',
-                allowZero : true,
-                precision : 0
-            })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#form').ajaxForm({
+            beforeSubmit: () => {
+                $.blockUI()
+            }, success: (res) => {
+                Swal.fire('Proceso exitoso', res, 'success').then(() => {
+                    window.LaravelDataTables['ProductosTable'].draw(false)
+                    cerrarModal()
+                })
+            }, error: (res) => {
+                res.status == 422
+                    ? mostrarErroresAjax(res)
+                    : Swal.fire('Ocurrió un error', res.responseText, 'error')
+            }, complete: () => {
+                $.unblockUI()
+            }
         })
+        $('.maskmoney').maskMoney({
+            prefix    : '$',
+            thousands :'.',
+            decimal   :'',
+            allowZero : true,
+            precision : 0
+        })
+    })
 
-        validarArchivo = (archivo) => {
-            var permitidas = ['.jpg', '.jpeg', '.png', '.PNG', '.JPG', '.JPEG'],
-                ruta = archivo.value,
-                punto = archivo.value.lastIndexOf("."),
-                ext = ruta.slice(punto, ruta.length)
-            if (permitidas.indexOf(ext) == -1) {
-                Swal.fire('Formato inválido', 'El archivo debe estar en formato de imagen (jpg, jpeg, png).', 'error')
-                $('#imagen').val('')
-                $('#imgPrev').prop('src', '{{ asset($producto->ruta_imagen ?? 'default_product.png') }}')
-                return
-            } else
-                $('#imgPrev').prop('src', URL.createObjectURL(archivo.files[0]))
-        }
-    </script>
-@endpush
+    validarArchivo = (archivo) => {
+        var permitidas = ['.jpg', '.jpeg', '.png', '.PNG', '.JPG', '.JPEG'],
+            ruta = archivo.value,
+            punto = archivo.value.lastIndexOf("."),
+            ext = ruta.slice(punto, ruta.length)
+        if (permitidas.indexOf(ext) == -1) {
+            Swal.fire('Formato inválido', 'El archivo debe estar en formato de imagen (jpg, jpeg, png).', 'error')
+            $('#imagen').val('')
+            $('#imgPrev').prop('src', '{{ asset($producto->ruta_imagen ?? 'default_product.png') }}')
+            return
+        } else
+            $('#imgPrev').prop('src', URL.createObjectURL(archivo.files[0]))
+    }
+</script>

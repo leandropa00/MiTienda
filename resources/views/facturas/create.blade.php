@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+    @include('layouts.ajax_errors')
     <div class="row form-group">
         <div class="col-sm-3 offset-sm-3">
             {!! Form::label(null, 'Número factura') !!}
@@ -61,11 +62,14 @@
             </table>
         </div>
     </div>
-@endsection
-
-@push('scripts')
+    <div class="row">
+        <div class="col-sm-10 offset-sm-1">
+            <a onclick="guardarFactura()" class="btn btn-primary btn-sm btn-block">
+                Guardar
+            </a>
+        </div>
+    </div>
     <script type="text/javascript">
-        const FORMATTER = new Intl.NumberFormat()
         $(document).ready(function () {
             $('.selectpicker').selectpicker()  
         })
@@ -99,18 +103,46 @@
                 $('#cantidad').val(1)
                 $('#producto').selectpicker('val', '')
                 ocultarNoProducts()
-            }            
+            }
         }
-
+    
         removerProducto = (selector) => {
             $(selector).closest('tr.producto').remove()
             ocultarNoProducts()
         }
-
+    
         ocultarNoProducts = () => {
             $('.producto').length 
                 ? $('#no-products').addClass('d-none') 
                 : $('#no-products').removeClass('d-none')            
         }
+
+        guardarFactura = () => {
+            $.blockUI()
+            var productos = {}
+            $('.producto').each(function (i, e) {
+                productos[$(this).data('id')] = {
+                    cantidad : $(this).data('cantidad'),
+                    precio   : $(this).data('precio'),
+                    subtotal : $(this).data('subtotal')
+                }
+            })
+            var data = {
+                _token    : '{{ csrf_token() }}',
+                productos : productos
+            }
+            $.post("{{ route('facturas.store') }}", data).done((res) => {
+                Swal.fire('Proceso exitoso', res, 'success').then(() => {
+                    window.LaravelDataTables['FacturasTable'].draw(false)
+                    cerrarModal()
+                })
+            }).fail((res) => {
+                res.status == 422 
+                    ? mostrarErroresAjax(res)
+                    : Swal.fire('Ocurrió un error', res.responseText, 'error')
+            }).always(() => {
+                $.unblockUI()
+            })
+        }
     </script>
-@endpush
+@endsection

@@ -17,4 +17,3 @@
 <div class="modal-footer">
     @yield('footer')
 </div>
-@stack('scripts')

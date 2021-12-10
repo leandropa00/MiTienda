@@ -15,6 +15,9 @@ class ProductosDataTable extends DataTable
             ->editColumn('precio', function ($producto) {
                 return '$'.number_format($producto->precio, 0, ',', '.');
             })
+            ->addColumn('stock', function ($producto) {
+                return $producto->stock;
+            })
             ->editColumn('created_at', function ($producto) {
                 return $producto->created_at->format('d/m/Y');
             });
@@ -45,6 +48,7 @@ class ProductosDataTable extends DataTable
             'descripcion'     => ['title' => 'Descripción'],
             'precio',
             'cantidad_minima' => ['title' => 'Cantidad mínima'],
+            'stock',
             'created_at'      => ['title' => 'Fecha creación'],
         ];
     }

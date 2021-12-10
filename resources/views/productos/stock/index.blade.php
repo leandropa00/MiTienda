@@ -11,9 +11,6 @@
     <br><br>
     <div id="stock-form" class="mb-3"></div>
     @include('productos.stock.table')
-@endsection
-
-@push('scripts')
     <script type="text/javascript">
         crearStock = () => {
             $.blockUI()
@@ -26,4 +23,4 @@
             )
         }
     </script>
-@endpush
+@endsection

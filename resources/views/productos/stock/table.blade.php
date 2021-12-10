@@ -6,7 +6,5 @@
     {!! $dataTable->table(['width' => '100%']) !!}
 </div>
 
-@push('scripts')
-    @include('layouts.datatables_js')
-    {!! $dataTable->scripts() !!}
-@endpush
+@include('layouts.datatables_js')
+{!! $dataTable->scripts() !!}

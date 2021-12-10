@@ -99,6 +99,7 @@
         <script type="text/javascript" src="{{ asset('js/font-awesome.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/bootstrap-select.min.js') }}"></script>
         <script type="text/javascript">
+            const FORMATTER = new Intl.NumberFormat()
             $(document).ready(function () {
                 $('#ventana').on('hidden.bs.modal', function (e) {
                     e.target.id == 'ventana' && $('#ventana-content').empty()
