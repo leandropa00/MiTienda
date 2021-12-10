@@ -15,6 +15,7 @@ class Producto extends Model
     ];
 
     protected $casts = [
+        'id'               => 'integer',
         'nombre'           => 'string',
         'descripcion'      => 'string',
         'precio'           => 'integer',
@@ -48,6 +49,18 @@ class Producto extends Model
     public function stock()
     {
         return $this->hasMany(Stock::class, 'producto_id');
+    }
+
+    public function facturas()
+    {
+        return $this->belongsToMany(Factura::class, 'productos_facturas', 'producto_id', 'factura_id')
+            ->using(ProductoFactura::class)
+            ->withPivot(['precio', 'cantidad', 'subtotal']);
+    }
+
+    public function getStockAttribute()
+    {
+        return $this->stock()->sum('cantidad') - $this->facturas()->sum('productos_facturas.cantidad');
     }
 
     public function cargarImagen($foto): void

@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Factura;
+use App\Models\Producto;
 use Closure;
 use Illuminate\Support\Facades\View;
 
@@ -20,6 +22,13 @@ class ViewVariables
             $inputNumeric = ['class' => 'form-control', 'onkeyup' => 'this.value = soloNumeros(this.value, true)'];
             $sesion = auth()->user();
             $view->with(compact('select', 'input', 'inputFiltro', 'textarea', 'datetimepicker', 'moneda', 'sesion', 'inputNumeric'));
+        });
+
+        //* Datos CRUD facturas
+        View::composer(['*'], function ($view) {
+            $productos = Producto::all();
+            $consecutivo = Factura::getConsecutivo();
+            $view->with(compact('productos', 'consecutivo'));
         });
 
         return $next($request);

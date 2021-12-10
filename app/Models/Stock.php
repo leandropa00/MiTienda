@@ -13,6 +13,7 @@ class Stock extends Model
     ];
 
     protected $casts = [
+        'id'          => 'integer',
         'producto_id' => 'string',
         'cantidad'    => 'integer',
     ];

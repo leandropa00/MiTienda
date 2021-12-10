@@ -9,9 +9,14 @@
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-select.css') }}" />
         <style>
             a {
                 cursor: pointer;
+            }
+
+            .bordered {
+                border: 1px solid #ccc !important;
             }
         </style>
         @stack('css')
@@ -31,9 +36,9 @@
                             <li class="nav-item">
                                 <a class="nav-link @if(Route::is('productos*')) active @endif" href="{{ route('productos.index') }}">Productos</a>
                             </li>
-                            {{-- <li class="nav-item">
-                                <a class="nav-link @if(Route::is('facturas')) active @endif" href="{{ route('facturas') }}">Facturas</a>
-                            </li> --}}
+                            <li class="nav-item">
+                                <a class="nav-link @if(Route::is('facturas*')) active @endif" href="{{ route('facturas.index') }}">Facturas</a>
+                            </li>
                         </ul>
                         <ul class="navbar-nav ml-auto">
                             @guest
@@ -91,7 +96,8 @@
         <script type="text/javascript" src="{{ asset('js/sweetalert2@9.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/maskMoney.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/ajax-form.min.js') }}"></script>
-        <script type="text/javascript" src="{{asset('js/font-awesome.js')}}"></script>
+        <script type="text/javascript" src="{{ asset('js/font-awesome.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/bootstrap-select.min.js') }}"></script>
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#ventana').on('hidden.bs.modal', function (e) {

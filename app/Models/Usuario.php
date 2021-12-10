@@ -18,6 +18,7 @@ class Usuario extends Authenticatable
     ];
 
     protected $casts = [
+        'id'     => 'integer',
         'nombre' => 'string',
         'correo' => 'string',
         'clave'  => 'string',
