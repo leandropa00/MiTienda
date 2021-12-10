@@ -18,5 +18,9 @@
         editarProducto = (id) => {
             cargarModal('{{ route('productos.edit', ':id') }}'.replace(':id', id), 'lg')
         }
+
+        verStock = (id) => {
+            cargarModal('{{ route('stock.index', ':id') }}'.replace(':id', id), 'lg')
+        }
     </script>
 @endpush

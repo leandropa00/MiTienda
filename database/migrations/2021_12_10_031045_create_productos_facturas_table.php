@@ -16,6 +16,7 @@ class CreateProductosFacturasTable extends Migration
         Schema::create('productos_facturas', function (Blueprint $table) {
             $table->foreignId('producto_id')->references('id')->on('productos')->onDelete('restrict');
             $table->foreignId('factura_id')->references('id')->on('facturas')->onDelete('restrict');
+            $table->integer('precio')->unsigned();
             $table->smallInteger('cantidad');            
             $table->integer('subtotal')->unsigned();
         });

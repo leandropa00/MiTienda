@@ -55,7 +55,7 @@
                     $.blockUI()
                 }, success: (res) => {
                     Swal.fire('Proceso exitoso', res, 'success').then(() => {
-                        window.LaravelDataTables['ProductosTable'].draw()
+                        window.LaravelDataTables['ProductosTable'].draw(false)
                         cerrarModal()
                     })
                 }, error: (res) => {

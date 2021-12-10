@@ -12,8 +12,11 @@ class ProductosDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
         return $dataTable->addColumn('action', 'productos.actions')
-            ->addColumn('precio', function ($producto) {
+            ->editColumn('precio', function ($producto) {
                 return '$'.number_format($producto->precio, 0, ',', '.');
+            })
+            ->editColumn('created_at', function ($producto) {
+                return $producto->created_at->format('d/m/Y');
             });
     }
 
@@ -30,7 +33,7 @@ class ProductosDataTable extends DataTable
             ->addTableClass('table table-striped dt-responsive')
             ->minifiedAjax()
             ->addAction(['title' => 'Acción', 'width' => '120px'])
-            // ->retrieve(true)
+            ->retrieve(true)
             ->ordering(false)
             ->language(asset('DataTables/language.json'));
     }
@@ -42,6 +45,7 @@ class ProductosDataTable extends DataTable
             'descripcion'     => ['title' => 'Descripción'],
             'precio',
             'cantidad_minima' => ['title' => 'Cantidad mínima'],
+            'created_at'      => ['title' => 'Fecha creación'],
         ];
     }
 }

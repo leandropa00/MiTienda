@@ -45,6 +45,11 @@ class Producto extends Model
         'cantidad_minima.max'      => 'La cantidad mínima supera la permitida',
     ];
 
+    public function stock()
+    {
+        return $this->hasMany(Stock::class, 'producto_id');
+    }
+
     public function cargarImagen($foto): void
     {
         $foto->storeAs('imagenes_productos', "{$this->id}.{$this->extension_imagen}");
