@@ -20,6 +20,6 @@ Route::middleware(['auth', 'variables'])->group(function () {
     Route::get('stock/{producto}/create', 'StockController@create')->name('stock.create');
     Route::post('stock/{producto}', 'StockController@store')->name('stock.store');
     //* Facturas
+    Route::get('facturas/exportar/{factura}', 'FacturaController@exportar')->name('facturas.exportar');
     Route::resource('facturas', FacturaController::class)->only(['index', 'create', 'store']);
-
 });

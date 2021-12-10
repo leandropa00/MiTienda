@@ -6,6 +6,7 @@ use App\DataTables\FacturaDataTable;
 use App\Http\Requests\factura\CreateRequest;
 use App\Models\Factura;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class FacturaController extends Controller
 {
@@ -33,5 +34,10 @@ class FacturaController extends Controller
             DB::rollback();
             return $this->responseError($th->getMessage());
         }
+    }
+
+    public function exportar(Factura $factura)
+    {
+        return PDF::loadView('facturas.pdf', compact('factura'))->stream("Mantenimiento #{$factura->numero_factura}.pdf");
     }
 }
