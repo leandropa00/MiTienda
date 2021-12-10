@@ -103,11 +103,12 @@
                 var html = ''
                 $.each(res.responseJSON.errors, function (campo, valor) {
                     $.each(valor, function (campo, val) {
-                        html += val + "<br>";
+                        html += val + '<br>';
                     })
                 })
-                $("#errores").html(html)
-                $("#errores").removeClass("d-none")
+                $('#errores>#mensajes').html(html)
+                $('#errores').removeClass('d-none')
+                window.location.href = '#errores'
             }
 
             cargarModal = (url, size) => {
